@@ -1,0 +1,31 @@
+---
+export interface Props {
+  label: string;
+  url: string;
+  style?: 'primary' | 'secondary';
+}
+const { label, url, style = 'primary' } = Astro.props;
+---
+<a href={url} target="_blank" rel="noopener sponsored" class={`affiliate-btn ${style}`}>
+  {label}
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+</a>
+<style>
+  .affiliate-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 50px; text-decoration: none;
+    font-weight: 700; font-size: 1rem; transition: all 0.3s;
+    cursor: pointer; border: none;
+  }
+  .affiliate-btn.primary {
+    background: linear-gradient(135deg, #00d4aa, #00a88a);
+    color: #fff; box-shadow: 0 4px 15px rgba(0,212,170,0.3);
+  }
+  .affiliate-btn.primary:hover {
+    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0,212,170,0.4);
+  }
+  .affiliate-btn.secondary {
+    background: transparent; color: #00d4aa; border: 2px solid #00d4aa;
+  }
+  .affiliate-btn.secondary:hover { background: rgba(0,212,170,0.1); }
+</style>
