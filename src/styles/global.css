@@ -1,0 +1,54 @@
+/* SolarVantage Pro — Solar Energy Theme */
+:root {
+  --color-bg: #0a1628;
+  --color-surface: #0f2038;
+  --color-text: #e0e8f0;
+  --color-text-secondary: #8899aa;
+  --color-primary: #00d4aa;
+  --color-primary-hover: #00b894;
+  --color-accent: #ffd700;
+  --color-border: #1a3050;
+  --max-width: 720px;
+  --max-width-wide: 1100px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans); color: var(--color-text); background: var(--color-bg);
+  line-height: 1.7; -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.3; font-weight: 800; color: var(--color-text); letter-spacing: -0.02em; }
+h1 { font-size: 2.25rem; } h2 { font-size: 1.625rem; margin-top: 2.5rem; }
+p { margin-bottom: 1.25rem; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { color: var(--color-primary-hover); text-decoration: underline; }
+.site-header { background: rgba(10,22,40,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: var(--max-width-wide); margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.site-logo { font-weight: 800; font-size: 1.25rem; color: var(--color-text); text-decoration: none; }
+.site-logo:hover { color: var(--color-primary); }
+.site-nav a { color: var(--color-text-secondary); margin-left: 1.5rem; font-size: 0.9rem; }
+.site-nav a:hover { color: var(--color-primary); text-decoration: none; }
+.container { max-width: var(--max-width); margin: 2rem auto; padding: 0 1rem; }
+.hero { background: linear-gradient(135deg, #0a1628 0%, #0f2840 50%, #0a1628 100%); padding: 4rem 1rem; text-align: center; }
+.hero h1 { font-size: 2.5rem; max-width: 600px; margin: 0 auto 1rem; }
+.hero .highlight { color: var(--color-primary); }
+.hero p { color: var(--color-text-secondary); max-width: 500px; margin: 0 auto 2rem; font-size: 1.1rem; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; }
+.card:hover { border-color: var(--color-primary); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,212,170,0.1); }
+.card-category { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary); font-weight: 600; }
+.card-title { font-size: 1.1rem; margin: 0.5rem 0 0.75rem; }
+.card-title a { color: var(--color-text); } .card-title a:hover { color: var(--color-primary); }
+.card-meta { font-size: 0.85rem; color: var(--color-text-secondary); }
+.card-excerpt { font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.5; }
+.btn { display: inline-block; background: var(--color-primary); color: #0a1628; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; }
+.btn:hover { background: var(--color-primary-hover); text-decoration: none; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+th { background: var(--color-surface); font-weight: 600; }
+footer { border-top: 1px solid var(--color-border); padding: 2rem 0; margin-top: 4rem; color: var(--color-text-secondary); }
+.footer-inner { max-width: var(--max-width-wide); margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; }
+.footer-links a { color: var(--color-text-secondary); margin-left: 1.5rem; font-size: 0.85rem; }
+.disclosure { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+@media (max-width: 768px) { h1 { font-size: 1.75rem; } .card-grid { grid-template-columns: 1fr; } }

@@ -1,0 +1,10 @@
+---
+export interface Props { title: string; description: string; url: string; category?: string; date?: string; }
+const { title, description, url, category, date } = Astro.props;
+---
+<article class="card">
+  {category && <span class="card-category">{category}</span>}
+  <h2 class="card-title"><a href={url}>{title}</a></h2>
+  {date && <div class="card-meta"><time datetime={date}>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time></div>}
+  <p class="card-excerpt">{description}</p>
+</article>

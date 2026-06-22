@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  const articles = Object.values(import.meta.glob('../../content/articles/*.mdx', { eager: true }));
+  return articles.map((article: any) => {
+    const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
+    return { params: { slug }, props: { article } };
+  });
+}
+const { article } = Astro.props;
+const { title, description, pubDate, date, category, tags, metaDescription, featuredImage } = article.frontmatter || {};
+const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
+const Content = article.Content;
+---
+<BaseLayout title={title} description={metaDescription || description} type="article" publishedTime={date || pubDate} tags={tags}>
+  <div class="container">
+    <article>
+      <span class="card-category">{category}</span>
+      <h1>{title}</h1>
+      <div class="card-meta" style="margin-bottom:2rem;">{new Date(date || pubDate || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

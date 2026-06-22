@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+const articles = Object.values(import.meta.glob('../content/articles/*.mdx', { eager: true }));
+const allArticles = articles.sort((a: any, b: any) => new Date(a.frontmatter?.date || a.frontmatter?.pubDate || 0) > new Date(b.frontmatter?.date || b.frontmatter?.pubDate || 0) ? -1 : 1);
+---
+<BaseLayout title="SolarVantage Pro" description="Save on solar generators, panels, and portable power stations. Reviews, deals, and buying guides for solar energy products." type="website">
+  <section class="hero">
+    <div class="container-narrow">
+      <h1>Harness the <span class="highlight">Power of the Sun</span></h1>
+      <p>Expert reviews, deals, and buying guides for solar generators, panels, and portable power stations. Make the switch to solar energy.</p>
+    </div>
+  </section>
+  <div class="container">
+    <section>
+      <h2>Latest Guides &amp; Reviews</h2>
+      <div class="card-grid">
+        {allArticles.map((article: any) => {
+          const { title, description, pubDate, date, category } = article.frontmatter || {};
+          const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
+          return <ArticleCard title={title} description={description} url={`/articles/${slug}/`} category={category} date={date || pubDate} />;
+        })}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

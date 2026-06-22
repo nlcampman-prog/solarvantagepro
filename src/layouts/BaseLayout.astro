@@ -1,0 +1,64 @@
+---
+export interface Props { title: string; description: string; canonical?: string; image?: string; type?: 'website' | 'article'; publishedTime?: string; tags?: string[]; }
+import '../styles/global.css';
+const { title, description, canonical, image = '/og-default.png', type = 'website', publishedTime, tags = [] } = Astro.props as Props;
+const siteTitle = 'SolarVantage Pro';
+const fullTitle = title === siteTitle ? siteTitle : `${title} | ${siteTitle}`;
+const siteUrl = 'https://solarvantagepro.com';
+const pageUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
+const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+const jsonLd = type === 'article' ? {
+  '@context': 'https://schema.org', '@type': 'Article', headline: title, description, image: ogImage, datePublished: publishedTime,
+  author: { '@type': 'Organization', name: siteTitle, url: siteUrl },
+  publisher: { '@type': 'Organization', name: siteTitle, logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` } },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+} : {
+  '@context': 'https://schema.org', '@type': 'WebSite', name: siteTitle, url: siteUrl,
+  description: 'Solar energy deals, reviews, and guides. Save on solar generators, panels, and portable power stations.',
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={pageUrl} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={pageUrl} />
+  <meta property="og:type" content={type} />
+  <meta property="og:site_name" content={siteTitle} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  {tags.map(tag => <meta property="article:tag" content={tag} />)}
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  <title>{fullTitle}</title>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <link rel="alternate" type="application/rss+xml" title={`${siteTitle} — Solar Deals & Guides`} href="/rss.xml" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-logo"><span class="logo-icon">☀️</span> SolarVantage Pro</a>
+      <nav class="site-nav">
+        <a href="/">Home</a> <a href="/deals/">Deals</a> <a href="/about/">About</a> <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main><slot /></main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-text">&copy; {new Date().getFullYear()} SolarVantage Pro. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="/about/">About</a> <a href="/privacy/">Privacy</a> <a href="/affiliate-disclosure/">Disclosure</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
