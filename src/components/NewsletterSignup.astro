@@ -1,0 +1,76 @@
+---
+export interface Props {
+  siteName?: string;
+}
+const { siteName = 'our deals' } = Astro.props;
+---
+<div class="newsletter-section">
+  <div class="newsletter-inner">
+    <h3>💌 Get the Best {siteName} Weekly</h3>
+    <p>No spam, just the best discounts and deals delivered to your inbox.</p>
+    <form class="newsletter-form" id="newsletter-form" data-list-id="2">
+      <input type="email" id="newsletter-email" placeholder="Your email address" required />
+      <button type="submit">Subscribe →</button>
+    </form>
+    <p class="newsletter-note" id="newsletter-message">Unsubscribe anytime. We respect your privacy.</p>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('newsletter-form');
+  const emailInput = document.getElementById('newsletter-email');
+  const message = document.getElementById('newsletter-message');
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    if (!email) return;
+    
+    message.textContent = 'Subscribing...';
+    const listId = parseInt(form.dataset.listId || '2');
+    
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, listId }),
+      });
+      
+      if (res.ok) {
+        message.textContent = '✅ Subscribed! Check your inbox.';
+        emailInput.value = '';
+      } else {
+        const err = await res.json();
+        if (err.error?.includes('already exist')) {
+          message.textContent = '✅ Already subscribed!';
+        } else {
+          message.textContent = '❌ Something went wrong. Try again.';
+        }
+      }
+    } catch {
+      message.textContent = '❌ Network error. Try again.';
+    }
+  });
+</script>
+
+<style is:global>
+  .newsletter-section {
+    background: linear-gradient(135deg, #00d4aa, #0a1628);
+    border-radius: 12px; padding: 2rem; margin: 2rem auto; max-width: 500px;
+    text-align: center; color: white;
+  }
+  .newsletter-inner h3 { margin: 0 0 0.5rem; font-size: 1.3rem; }
+  .newsletter-inner p { margin: 0 0 1rem; font-size: 0.9rem; opacity: 0.9; }
+  .newsletter-form { display: flex; gap: 8px; }
+  .newsletter-form input {
+    flex: 1; padding: 10px 16px; border: none; border-radius: 8px;
+    font-size: 0.95rem;
+  }
+  .newsletter-form button {
+    padding: 10px 24px; border: none; border-radius: 8px;
+    background: #fff; color: #0a1628;
+    font-weight: 700; font-size: 0.95rem; cursor: pointer;
+  }
+  .newsletter-form button:hover { transform: scale(1.05); }
+  .newsletter-note { font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem; }
+</style>

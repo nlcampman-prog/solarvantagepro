@@ -1,6 +1,7 @@
 ---
 export interface Props { title: string; description: string; canonical?: string; image?: string; type?: 'website' | 'article'; publishedTime?: string; tags?: string[]; }
 import '../styles/global.css';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
 const { title, description, canonical, image = '/og-default.png', type = 'website', publishedTime, tags = [] } = Astro.props as Props;
 const siteTitle = 'SolarVantage Pro';
 const fullTitle = title === siteTitle ? siteTitle : `${title} | ${siteTitle}`;
@@ -52,6 +53,7 @@ const jsonLd = type === 'article' ? {
     </div>
   </header>
   <main><slot /></main>
+  <NewsletterSignup siteName="Solar Deals" />
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-text">&copy; {new Date().getFullYear()} SolarVantage Pro. All rights reserved.</div>
