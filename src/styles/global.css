@@ -52,3 +52,17 @@ footer { border-top: 1px solid var(--color-border); padding: 2rem 0; margin-top:
 .footer-links a { color: var(--color-text-secondary); margin-left: 1.5rem; font-size: 0.85rem; }
 .disclosure { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
 @media (max-width: 768px) { h1 { font-size: 1.75rem; } .card-grid { grid-template-columns: 1fr; } }
+/* Buy button in nav */
+.buy-btn {
+  background: linear-gradient(135deg, #00d4aa, #00a88a) !important;
+  color: white !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+}
+.buy-btn:hover {
+  background: linear-gradient(135deg, #00a88a, #008a72) !important;
+  color: white !important;
+  transform: scale(1.05);
+}
