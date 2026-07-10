@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const articles = Object.values(import.meta.glob('../../content/articles/*.mdx', { eager: true }));
+const authorArticles = articles
+  .filter((a: any) => (a.frontmatter?.author || 'Nichole') === 'Nichole')
+  .sort((a: any, b: any) => new Date(b.frontmatter?.pubDate || b.frontmatter?.date || 0).getTime() - new Date(a.frontmatter?.pubDate || a.frontmatter?.date || 0).getTime());
+---
+
+<BaseLayout
+  title="Nichole — Founder of Wellness Savings"
+  description="Learn more about Nichole, founder of Wellness Savings. Mom of 5, former speech-language pathologist, and wellness enthusiast."
+>
+  <div class="container-narrow about-section">
+    <div class="author-header" style="display:flex;gap:2rem;align-items:start;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <div style="flex-shrink:0;width:200px;height:200px;border-radius:50%;background:linear-gradient(135deg,#ecfdf5,#a7f3d0);display:flex;align-items:center;justify-content:center;font-size:4.5rem;color:#059669;font-weight:700;border:4px solid #d1fae5;">N</div>
+      <div style="flex:1;min-width:250px;">
+        <h1 style="margin-bottom:0.25rem;">Nichole</h1>
+        <p style="font-size:1rem;color:var(--color-primary);font-weight:600;margin-bottom:1rem;">Founder & Content Creator at Wellness Savings</p>
+        <p style="font-size:1.05rem;line-height:1.7;">Mom of 5 | Former Pediatric Speech-Language Pathologist (10+ years) | Wellness & Nutrition Enthusiast</p>
+      </div>
+    </div>
+
+    <h2>About Nichole</h2>
+    <p>Nichole is the founder and voice behind Wellness Savings. With over a decade of clinical experience as a pediatric speech-language pathologist and a household of 5 kids to feed and care for, she brings a unique blend of professional expertise and real-world parenting wisdom to every product recommendation and deal she shares.</p>
+    <p>After years of helping families navigate pediatric health challenges, Nichole stepped back from her clinical career to focus on raising her children — including a set of twins. It was during this time that she discovered how challenging (and expensive) it was to find truly healthy, quality products for her family.</p>
+    <p>Wellness Savings was born from that frustration. Today, Nichole spends her days researching wellness products, negotiating exclusive discount codes, and sharing honest reviews — so other families don't have to choose between quality and affordability.</p>
+
+    <h2>Credentials & Expertise</h2>
+    <ul>
+      <li><strong>10+ years</strong> as a licensed pediatric speech-language pathologist</li>
+      <li>Bachelor's and Master's degrees in Communication Sciences & Disorders</li>
+      <li>Extensive experience with pediatric nutrition, development, and family wellness</li>
+      <li>Passionate about clean eating, organic products, and natural wellness solutions</li>
+      <li>Real-life experience managing wellness for a family of 7 on a budget</li>
+    </ul>
+
+    <h2>Why I Started Wellness Savings</h2>
+    <p>"I created Wellness Savings because I wanted one place where busy parents could find honest, research-backed recommendations for health and wellness products — without the hype and without paying full price. Every deal on this site is one I'd use for my own family." <em>— Nichole</em></p>
+
+    <h2>My Promise to You</h2>
+    <p>I personally review every product featured on this site. I only recommend brands and products I trust, and I always disclose when a link is an affiliate partnership. Your health and your wallet matter to me — and my goal is to help you feel good about both.</p>
+
+    <h2>Get in Touch</h2>
+    <p>Have a question or suggestion? I'd love to hear from you! Email me directly at <a href="mailto:unconventionalsahm@gmail.com">unconventionalsahm@gmail.com</a>.</p>
+  </div>
+
+  <div class="container">
+    <h2>Articles by Nichole</h2>
+    <div class="card-grid">
+      {authorArticles.map((article: any) => {
+        const { title, description, pubDate, date, category } = article.frontmatter;
+        const slug = article.url?.split('/').pop()?.replace('.mdx', '') || '';
+        const articleDate = pubDate || date || '';
+        return (
+          <ArticleCard
+            title={title}
+            description={description}
+            url={`/articles/${slug}/`}
+            category={category}
+            date={articleDate}
+          />
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

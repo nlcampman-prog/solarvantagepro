@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   });
 }
 const { article } = Astro.props;
-const { title, description, pubDate, date, category, tags, metaDescription, featuredImage } = article.frontmatter || {};
+const { title, description, pubDate, date, category, tags, metaDescription, featuredImage, author } = article.frontmatter || {};
 const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
 const Content = article.Content;
 ---
@@ -17,7 +17,7 @@ const Content = article.Content;
     <article>
       <span class="card-category">{category}</span>
       <h1>{title}</h1>
-      <div class="card-meta" style="margin-bottom:2rem;">{new Date(date || pubDate || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+      <span>By <a href="/authors/nichole/" style="font-weight:600;">{(author || 'Nichole')}</a></span><span aria-hidden="true"> · </span><div class="card-meta" style="margin-bottom:2rem;">{new Date(date || pubDate || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
       <Content />
     </article>
   </div>
