@@ -1,4 +1,5 @@
 ---
+const pinImages = import.meta.glob('../../public/pins/*.jpg', { eager: true });
 import BaseLayout from '../../layouts/BaseLayout.astro';
 export async function getStaticPaths() {
   const articles = Object.values(import.meta.glob('../../content/articles/*.mdx', { eager: true }));
@@ -8,11 +9,23 @@ export async function getStaticPaths() {
   });
 }
 const { article } = Astro.props;
+const rawSlug = Astro.params.slug || '';
+function getPinImage(slug) {
+  const pinKeys = Object.keys(pinImages);
+  for (const key of pinKeys) {
+    const filename = key.split('/').pop();
+    const name = filename.replace('.jpg', '');
+    if (name.includes(slug) || slug.includes((name.split('-2026')[0] || ''))) {
+      return 'https://solarvantagepro.com/pins/' + filename;
+    }
+  }
+  return null;
+}
 const { title, description, pubDate, date, category, tags, metaDescription, featuredImage, author } = article.frontmatter || {};
 const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
 const Content = article.Content;
 ---
-<BaseLayout title={title} description={metaDescription || description} type="article" publishedTime={date || pubDate} tags={tags}>
+<BaseLayout title={title} description={metaDescription || description} type="article" publishedTime image={getPinImage(rawSlug) || undefined}={date || pubDate} tags={tags}>
   <div class="container">
     <article>
       <span class="card-category">{category}</span>
