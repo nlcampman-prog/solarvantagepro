@@ -1,37 +1,80 @@
 ---
-const pinImages = import.meta.glob('../../public/pins/*.jpg', { eager: true });
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdPlaceholder from '../../components/AdPlaceholder.astro';
+import relatedData from '../../data/related.json';
+import { pinFilenames } from '../../data/pins';
+
 export async function getStaticPaths() {
-  const articles = Object.values(import.meta.glob('../../content/articles/*.mdx', { eager: true }));
-  return articles.map((article: any) => {
-    const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
-    return { params: { slug }, props: { article } };
+  const articles = import.meta.glob('../../content/articles/*.mdx', { eager: true });
+  return Object.entries(articles).map(([path, module]: [string, any]) => {
+    const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+    return { params: { slug }, props: { article: module } };
   });
 }
+
 const { article } = Astro.props;
 const rawSlug = Astro.params.slug || '';
-function getPinImage(slug) {
-  const pinKeys = Object.keys(pinImages);
-  for (const key of pinKeys) {
-    const filename = key.split('/').pop();
+
+function getPinImage(slug: string) {
+  for (const filename of pinFilenames) {
     const name = filename.replace('.jpg', '');
     if (name.includes(slug) || slug.includes((name.split('-2026')[0] || ''))) {
-      return 'https://solarvantagepro.com/pins/' + filename;
+      return '/pins/' + filename;
     }
   }
   return null;
 }
-const { title, description, pubDate, date, category, tags, metaDescription, featuredImage, author } = article.frontmatter || {};
-const slug = (article.file?.split('/')?.pop()?.replace(/\.(mdx|md)$/, '')) || '';
-const Content = article.Content;
+const { Content, frontmatter } = article;
+const { title, description, pubDate, updatedDate, category, tags = [], metaDescription, date, featuredImage, author } = frontmatter;
+const articleDesc = metaDescription || description || '';
+const articleDate = pubDate || date || '';
+const articleUpdated = updatedDate || articleDate;
+const articleAuthor = author || 'Nichole';
+
+const relatedArticles = (relatedData as Record<string, any[]>)[rawSlug] || [];
 ---
-<BaseLayout title={title} description={metaDescription || description} type="article" publishedTime image={getPinImage(rawSlug) || undefined}={date || pubDate} tags={tags}>
-  <div class="container">
+
+<BaseLayout title={title} description={articleDesc} type="article" image={getPinImage(rawSlug) || undefined} publishedTime={articleDate} tags={tags}>
+  <div class="container-narrow">
     <article>
-      <span class="card-category">{category}</span>
-      <h1>{title}</h1>
-      <span>By <a href="/authors/nichole/" style="font-weight:600;">{(author || 'Nichole')}</a></span><span aria-hidden="true"> · </span><div class="card-meta" style="margin-bottom:2rem;">{new Date(date || pubDate || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-      <Content />
+      <header class="article-header">
+        {category && <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}/`} class="card-category">{category}</a>}
+        <h1>{title}</h1>
+        <div class="article-meta">
+          <span>By <a href="/authors/nichole/" style="font-weight:600;">{articleAuthor}</a></span>
+          <span aria-hidden="true">·</span>
+          <time datetime={articleDate}>{new Date(articleDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          {articleUpdated && articleUpdated !== articleDate && <span>(Updated: {new Date(articleUpdated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })})</span>}
+          {tags.length > 0 && <span>{tags.map((tag: string) => <a href={`/categories/${tag.toLowerCase().replace(/\s+/g, '-')}/`} style="font-size:0.85rem;margin-right:0.5rem;">#{tag}</a>)}</span>}
+        </div>
+      </header>
+      <div class="article-content"><Content /></div>
+      <AdPlaceholder />
+      <div class="disclosure"><strong>Affiliate Disclosure:</strong> Some links on this page are affiliate links. If you purchase through them, we may earn a commission at no extra cost to you. We only recommend products we have tested and trust.</div>
+      {relatedArticles.length > 0 && (
+        <section class="related-articles">
+          <h2 class="related-heading">You May Also Like</h2>
+          <div class="related-grid">
+            {relatedArticles.map((a: any) => (
+              <a href={`/articles/${a.slug}/`} class="related-card">
+                <div class="related-image-wrapper">
+                  {a.featuredImage ? (
+                    <img src={a.featuredImage} alt={a.title} class="related-image" loading="lazy" width="320" height="180" />
+                  ) : (
+                    <div class="related-image-fallback">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                  )}
+                </div>
+                <div class="related-card-body">
+                  <span class="related-card-title">{a.title}</span>
+                  {a.date && <time class="related-card-date" datetime={a.date}>{new Date(a.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   </div>
 </BaseLayout>
